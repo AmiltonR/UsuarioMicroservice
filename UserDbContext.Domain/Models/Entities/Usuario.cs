@@ -25,8 +25,7 @@ namespace UserDbContext.Domain.Models.Entities
         public string ApellidoUsuario { get; set; }
         [Required]
         public string Correo { get; set; }
-        [Required]
-        public string Telefono { get; set; }
+        public string Telefono { get; set; } = String.Empty;
         [Required]
         public string Direccion { get; set; }
         [Required]

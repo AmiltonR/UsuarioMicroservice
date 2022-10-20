@@ -15,6 +15,7 @@ namespace UserDbContext.Domain.Models.DTOs
         public string NombreUsuario { get; set; }
         public string ApellidoUsuario { get; set; }
         public string Correo { get; set; }
+        public string Telefono { get; set; }
         public string Direccion { get; set; }
         public int Edad { get; set; }
         public DateTime FechaRegistro { get; set; }
