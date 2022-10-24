@@ -39,5 +39,8 @@ namespace UserDbContext.Domain.Models.Entities
         public int estado { get; set; }
         [ForeignKey("IdRol")]
         public virtual Rol rol { get; set; }
+
+        public virtual ICollection<HabilidadInstructor> HabilidadInstructores { get; set; }
+        public virtual ICollection<Instructor> Instructores { get; set; }
     }
 }

@@ -14,7 +14,12 @@ namespace UserDbContext.Infrastructure
         {
 
         }
+
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Instructor> Instructores { get; set; }
         public DbSet<Rol> Roles { get; set; }
+        public DbSet<Grado> Grados { get; set; }
+        public DbSet<Habilidad> Habilidades { get; set; }
+        public DbSet<HabilidadInstructor> HabilidadesInstructores { get; set; }
     }
 }

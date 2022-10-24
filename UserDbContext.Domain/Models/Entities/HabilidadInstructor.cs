@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace UserDbContext.Domain.Models.Entities
 {
-    public class Instructor
+    public class HabilidadInstructor
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -17,14 +17,13 @@ namespace UserDbContext.Domain.Models.Entities
         [ForeignKey("Usuario")]
         public int IdUsuario { get; set; }
         [Required]
-        [ForeignKey("Grado")]
-        public int IdGradoAcademico { get; set; }
-        [Required]
-        public string Perfil { get; set; }
+        [ForeignKey("Habilidad")]
+        public int IdHabilidad { get; set; }
 
         //Llaves foráneas
+        [ForeignKey("IdUsuario")]
         public virtual Usuario Usuario { get; set; }
-        public virtual Grado Grado { get; set; }
-
+        [ForeignKey("IdHabilidad")]
+        public virtual Habilidad Habilidad { get; set; }
     }
 }
