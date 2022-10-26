@@ -19,6 +19,8 @@ builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
+builder.Services.AddScoped<IGradoRepository, GradoRepository>();
+builder.Services.AddScoped<IHabilidadRepository, HabilidadRepository>();
 
 builder.Services.AddDbContext<UserContext>(options =>
 {

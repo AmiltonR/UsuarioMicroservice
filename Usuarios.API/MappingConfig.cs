@@ -29,7 +29,9 @@ namespace Usuarios.API
 
                 config.CreateMap<Habilidad, HabilidadPostDTO>();
                 config.CreateMap<HabilidadPostDTO, Habilidad>();
-
+                //Grado
+                config.CreateMap<Grado, GradoGetPutDTO>();
+                config.CreateMap<GradoGetPutDTO, Grado>();
             });
             return mappingConfig;
         }

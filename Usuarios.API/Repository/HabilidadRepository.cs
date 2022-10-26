@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using UserDbContext.Domain.Models.DTOs;
+using UserDbContext.Domain.Models.Entities;
 using UserDbContext.Infrastructure;
 
 namespace Usuarios.API.Repository
@@ -24,9 +26,10 @@ namespace Usuarios.API.Repository
             throw new NotImplementedException();
         }
 
-        public Task<HabilidadGetPutDTO> GetHabilidades()
+        public async Task<List<HabilidadGetPutDTO>> GetHabilidades()
         {
-            throw new NotImplementedException();
+            List<Habilidad> habilidades = await _db.Habilidades.ToListAsync();
+            return _mapper.Map<List<HabilidadGetPutDTO>>(habilidades);
         }
 
         public Task<bool> UpdateHabilidad(HabilidadGetPutDTO habilidad)
