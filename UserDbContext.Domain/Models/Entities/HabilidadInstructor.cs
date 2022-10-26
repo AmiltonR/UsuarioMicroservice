@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace UserDbContext.Domain.Models.Entities
 {
@@ -22,6 +23,7 @@ namespace UserDbContext.Domain.Models.Entities
 
         //Llaves foráneas
         [ForeignKey("IdUsuario")]
+        [NotMapped]
         public virtual Usuario Usuario { get; set; }
         [ForeignKey("IdHabilidad")]
         public virtual Habilidad Habilidad { get; set; }

@@ -23,7 +23,9 @@ namespace UserDbContext.Domain.Models.Entities
         public string Perfil { get; set; }
 
         //Llaves foráneas
+        [ForeignKey("IdUsuario")]
         public virtual Usuario Usuario { get; set; }
+        [ForeignKey("IdGradoAcademico")]
         public virtual Grado Grado { get; set; }
 
     }

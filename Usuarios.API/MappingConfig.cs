@@ -23,6 +23,13 @@ namespace Usuarios.API
                 config.CreateMap<Usuario, UsuarioDeleteDTO>();
                 config.CreateMap<UsuarioDeleteDTO, Usuario>();
 
+                //Habilidad
+                config.CreateMap<Habilidad, HabilidadGetPutDTO>();
+                config.CreateMap<HabilidadGetPutDTO, Habilidad>();
+
+                config.CreateMap<Habilidad, HabilidadPostDTO>();
+                config.CreateMap<HabilidadPostDTO, Habilidad>();
+
             });
             return mappingConfig;
         }

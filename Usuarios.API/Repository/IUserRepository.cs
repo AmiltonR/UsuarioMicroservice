@@ -6,12 +6,18 @@ namespace Usuarios.API.Repository
     public interface IUserRepository
     {
         Task<IEnumerable<UsuarioDTO>> GetUsers();
+        Task<IEnumerable<UsuarioDTO>> GetActiveUsers();
+
+        Task<IEnumerable<UsuarioDTO>> GetInactiveUsers();
+        Task<IEnumerable<UsuarioDTO>> GetUsersRolStBib();
+        Task<IEnumerable<UsuarioInstructorDTO>> GetInstructores();
+        Task<UsuarioInstructorDTO> GetInstructor(int id);
         Task<UsuarioDTO> GetUserById(int UserId);
+        Task<UsuarioDTO> GetUserByNombre(string Nombre);
         Task<UsuarioDTO> GetUserByCarnet(string UserCarnet);
-        Task<UsuarioPostDTO> CreateUser(UsuarioPostDTO usuarioPost);
+        Task<bool> CreateUser(UsuarioPostDTO usuarioPost);
         Task<UsuarioPutDTO> UpdateUser(UsuarioPutDTO usuario);
-        Task<UsuarioDeleteDTO> SetInactive(int Id);
-        Task<UsuarioDeleteDTO> SetActive(int Id);
+        Task<bool> ChangeState(int opt, int Id);
         Task<bool> Exists(string carnet);
             
     }

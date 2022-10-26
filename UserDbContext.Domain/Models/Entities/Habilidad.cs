@@ -18,6 +18,6 @@ namespace UserDbContext.Domain.Models.Entities
         [Required]
         public string DescripcionHabilidad { get; set; }
 
-        public ICollection<HabilidadInstructor> HabilidadInstructores { get; set; }
+       // public ICollection<HabilidadInstructor> HabilidadInstructores { get; set; }
     }
 }

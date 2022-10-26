@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserDbContext.Infrastructure;
 
@@ -11,9 +12,11 @@ using UserDbContext.Infrastructure;
 namespace UserDbContext.Infrastructure.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20221026015856_relationshipBetweenUsuarioInstructor")]
+    partial class relationshipBetweenUsuarioInstructor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,13 +192,13 @@ namespace UserDbContext.Infrastructure.Migrations
             modelBuilder.Entity("UserDbContext.Domain.Models.Entities.HabilidadInstructor", b =>
                 {
                     b.HasOne("UserDbContext.Domain.Models.Entities.Habilidad", "Habilidad")
-                        .WithMany()
+                        .WithMany("HabilidadInstructores")
                         .HasForeignKey("IdHabilidad")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("UserDbContext.Domain.Models.Entities.Usuario", "Usuario")
-                        .WithMany()
+                        .WithMany("HabilidadInstructores")
                         .HasForeignKey("IdUsuario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -214,7 +217,7 @@ namespace UserDbContext.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("UserDbContext.Domain.Models.Entities.Usuario", "Usuario")
-                        .WithMany()
+                        .WithMany("Instructores")
                         .HasForeignKey("IdUsuario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -240,9 +243,21 @@ namespace UserDbContext.Infrastructure.Migrations
                     b.Navigation("Instructores");
                 });
 
+            modelBuilder.Entity("UserDbContext.Domain.Models.Entities.Habilidad", b =>
+                {
+                    b.Navigation("HabilidadInstructores");
+                });
+
             modelBuilder.Entity("UserDbContext.Domain.Models.Entities.Rol", b =>
                 {
                     b.Navigation("Usuarios");
+                });
+
+            modelBuilder.Entity("UserDbContext.Domain.Models.Entities.Usuario", b =>
+                {
+                    b.Navigation("HabilidadInstructores");
+
+                    b.Navigation("Instructores");
                 });
 #pragma warning restore 612, 618
         }

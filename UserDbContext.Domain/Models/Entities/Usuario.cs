@@ -16,31 +16,31 @@ namespace UserDbContext.Domain.Models.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
-        public string Carnet { get; set; }
+        public string Carnet { get; set; }//
         [Required]
-        public string Clave { get; set; }
+        public string Clave { get; set; }//
         [Required]
-        public string NombreUsuario { get; set; }
+        public string NombreUsuario { get; set; }//
         [Required]
-        public string ApellidoUsuario { get; set; }
+        public string ApellidoUsuario { get; set; }//
         [Required]
-        public string Correo { get; set; }
-        public string Telefono { get; set; } = String.Empty;
+        public string Correo { get; set; }//
+        public string Telefono { get; set; } = String.Empty;//
         [Required]
-        public string Direccion { get; set; }
+        public string Direccion { get; set; }//
         [Required]
-        public int Edad { get; set; }
+        public int Edad { get; set; }//
         [Required]
-        public DateTime FechaRegistro { get; set; }
+        public DateTime FechaRegistro { get; set; }//
         [Required]
         [ForeignKey("rol")]
         public int IdRol { get; set; }
         [Required]
-        public int estado { get; set; }
+        public int estado { get; set; } = 1;
         [ForeignKey("IdRol")]
         public virtual Rol rol { get; set; }
 
-        public virtual ICollection<HabilidadInstructor> HabilidadInstructores { get; set; }
-        public virtual ICollection<Instructor> Instructores { get; set; }
+        ////public virtual ICollection<HabilidadInstructor> HabilidadInstructores { get; set; }
+        //public virtual ICollection<Instructor> Instructores { get; set; }
     }
 }
