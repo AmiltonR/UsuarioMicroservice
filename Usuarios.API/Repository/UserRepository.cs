@@ -207,6 +207,7 @@ namespace Usuarios.API.Repository
             _db.Entry(usuario).Property(x => x.Correo).IsModified = true;
             _db.Entry(usuario).Property(x => x.Direccion).IsModified = true;
             _db.Entry(usuario).Property(x => x.Edad).IsModified = true;
+            _db.Entry(usuario).Property(x => x.Telefono).IsModified = true;
             _db.Entry(usuario).Property(x => x.IdRol).IsModified = true;
             // _db.Usuarios.Update(usuario);
             await _db.SaveChangesAsync();
