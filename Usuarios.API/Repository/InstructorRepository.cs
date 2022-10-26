@@ -16,9 +16,63 @@ namespace Usuarios.API.Repository
             _db = db;
             _mapper = mapper;
         }
-        public Task<bool> CambiarUsuarioAInstructor()
+        public async Task<bool> CambiarUsuarioAInstructor(InstructorCambioRolInstructor cambioInstructor)
         {
-            throw new NotImplementedException();
+            //Variables
+            bool b = false;
+            Instructor instructor = null;
+            UsuarioRolDTO usuario = null;
+            HabilidadInstructor habilidades = null;
+            using var transaction = _db.Database.BeginTransaction();
+
+            try
+            {
+                //Guardar datos en Instructor
+                instructor = new Instructor
+                {
+                    IdUsuario = cambioInstructor.IdUsuario,
+                    IdGradoAcademico = cambioInstructor.IdGradoAcademico,
+                    Perfil = cambioInstructor.Perfil
+                };
+
+                //Guardando en base de datos
+                _db.Instructores.Add(instructor);
+                await _db.SaveChangesAsync();
+
+                //Modificando el rol en la cuenta de usuario
+                usuario = new UsuarioRolDTO
+                {
+                    Id = cambioInstructor.IdUsuario,
+                    IdRol = 3
+                };
+
+                Usuario u = _mapper.Map<UsuarioRolDTO, Usuario>(usuario);
+                _db.Usuarios.Attach(u);
+                _db.Entry(u).Property(u => u.IdRol).IsModified = true;
+                await _db.SaveChangesAsync();
+
+                //Guardar las Habilidades
+                foreach (var item in cambioInstructor.Habilidades)
+                {
+                    habilidades = new HabilidadInstructor
+                    {
+                        IdUsuario = usuario.Id,
+                        IdHabilidad = item.IdHabilidad
+                    };
+                    _db.HabilidadesInstructores.Add(habilidades);
+                    await _db.SaveChangesAsync();
+                }
+
+                transaction.Commit();
+
+                b = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return b;
         }
 
         public async Task<bool> CreateNuevaCuentaInstructor(InstructorCuentaNuevaPostDTO cuentaInstructor)

@@ -43,5 +43,31 @@ namespace Usuarios.API.Controllers
             }
             return Ok(_response);
         }
+
+        [HttpPost]
+        [Route("cambiorol")]
+        public async Task<object> PostInstructor([FromBody] InstructorCambioRolInstructor instructorPost)
+        {
+            bool usuario = false;
+
+            try
+            {
+                usuario = await _instructorRepository.CambiarUsuarioAInstructor(instructorPost);
+                if (usuario)
+                {
+                    _response.Success = true;
+                    _response.Message = "Cambio de cuenta de estudiante a instructor exitoso";
+                }
+                else
+                {
+                    _response.Message = "Ocurrió un error!";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return Ok(_response);
+        }
     }
 }

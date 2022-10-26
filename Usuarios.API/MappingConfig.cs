@@ -23,6 +23,9 @@ namespace Usuarios.API
                 config.CreateMap<Usuario, UsuarioDeleteDTO>();
                 config.CreateMap<UsuarioDeleteDTO, Usuario>();
 
+                config.CreateMap<Usuario, UsuarioRolDTO>();
+                config.CreateMap<UsuarioRolDTO, Usuario>();
+
                 //Habilidad
                 config.CreateMap<Habilidad, HabilidadGetPutDTO>();
                 config.CreateMap<HabilidadGetPutDTO, Habilidad>();
