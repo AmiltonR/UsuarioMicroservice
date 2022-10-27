@@ -178,6 +178,54 @@ namespace Usuarios.API.Repository
 
             return usuarioInstructorDTO;
         }
+
+        public async Task<IEnumerable<UsuarioInstructorDTO>> GetInstructoresByHabilidad(int idHabilidad)
+        {
+            //Filtramos la entidad Habilidades Instructor donde aparezca la habilidad que deseamos
+            List<HabilidadInstructor> habilidades = await _db.HabilidadesInstructores.Where(h => h.IdHabilidad == idHabilidad).ToListAsync();
+
+            List<Instructor> instructores = new List<Instructor>();
+            Instructor? instructor = null;
+
+            //Recorremos la lista para llenar otra lista con el id de usuario
+            //que tra la lista de habilidades
+            foreach (var item in habilidades)
+            {
+                instructor = await _db.Instructores.Where(i => i.IdUsuario == item.IdUsuario).Include(i => i.Usuario)
+                    .Include(i => i.Grado).FirstOrDefaultAsync();
+                instructores.Add(instructor);
+            }
+
+            //preparamos la lista de retorno
+            List<UsuarioInstructorDTO> usuarioInstructorList = new List<UsuarioInstructorDTO>();
+            UsuarioInstructorDTO usuarioInstructor = null;
+
+            //recorremos la lista de instructores para llenar nuestra lista de retorno
+            foreach (var item in instructores)
+            {
+              
+                usuarioInstructor = new UsuarioInstructorDTO
+                {
+                    Id = item.Id,
+                    IdUsuario = item.IdUsuario,
+                    Carnet = item.Usuario.Carnet,
+                    NombreUsuario = item.Usuario.NombreUsuario,
+                    ApellidoUsuario = item.Usuario.ApellidoUsuario,
+                    Correo = item.Usuario.Correo,
+                    Telefono = item.Usuario.Telefono,
+                    Direccion = item.Usuario.Direccion,
+                    Edad = item.Usuario.Edad,
+                    GradoAcademico = item.Grado.NombreGrado,
+                    Perfil = item.Perfil,
+                    FechaRegistro = item.Usuario.FechaRegistro.ToShortDateString(),        
+                };
+
+                usuarioInstructorList.Add(usuarioInstructor);
+            }
+
+            return usuarioInstructorList;
+        }
+
         public async Task<bool> CreateUser(UsuarioPostDTO usuariopost)
         {
             bool flag = false;
@@ -310,5 +358,6 @@ namespace Usuarios.API.Repository
             return b;
         }
 
+        
     }
 }

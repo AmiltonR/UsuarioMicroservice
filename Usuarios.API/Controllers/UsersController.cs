@@ -211,6 +211,33 @@ namespace Usuarios.API.Controllers
             return Ok(_response);
         }
 
+        //Get instructores by habilidad
+        [HttpGet]
+        [Route("instructoreshabilidad/{idHabilidad}")]
+        public async Task<object> GetInstructoresByHabilidad(int idHabilidad)
+        {
+            IEnumerable<UsuarioInstructorDTO> usuarioDto = null;
+            try
+            {
+                usuarioDto = await _userRepository.GetInstructoresByHabilidad(idHabilidad);
+                if (usuarioDto == null)
+                {
+                    _response.Message = "Hubo un error";
+                }
+                else
+                {
+                    _response.Success = true;
+                    _response.Message = "Instructores con la Habilidad solicitada";
+                    _response.Result = usuarioDto;
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return Ok(_response);
+        }
+
         //Get instructores
         [HttpGet]
         [Route("instructor/{id}")]

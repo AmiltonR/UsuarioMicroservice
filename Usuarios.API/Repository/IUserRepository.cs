@@ -11,6 +11,7 @@ namespace Usuarios.API.Repository
         Task<IEnumerable<UsuarioDTO>> GetInactiveUsers();
         Task<IEnumerable<UsuarioDTO>> GetUsersRolStBib();
         Task<IEnumerable<UsuarioInstructorDTO>> GetInstructores();
+        Task<IEnumerable<UsuarioInstructorDTO>> GetInstructoresByHabilidad(int idHabilidad);
         Task<UsuarioInstructorDTO> GetInstructor(int id);
         Task<UsuarioDTO> GetUserById(int UserId);
         Task<UsuarioDTO> GetUserByNombre(string Nombre);
