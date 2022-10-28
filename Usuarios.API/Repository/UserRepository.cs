@@ -138,7 +138,7 @@ namespace Usuarios.API.Repository
         {
             UsuarioInstructorDTO usuarioInstructorDTO = null;
             Instructor? instructor = await _db.Instructores.Include(u => u.Usuario)
-               .Include(u => u.Grado).Where(u => u.Usuario.estado == 1).FirstOrDefaultAsync(u => u.IdUsuario == id);
+               .Include(u => u.Grado).FirstOrDefaultAsync(u => u.IdUsuario == id);
 
             if (instructor!=null)
             {
@@ -300,6 +300,9 @@ namespace Usuarios.API.Repository
                 };
 
                 Usuario user = _mapper.Map<UsuarioDeleteDTO, Usuario>(userDTO);
+
+
+
                 _db.Usuarios.Attach(user);
                 _db.Entry(user).Property(x => x.estado).IsModified = true;
                 _db.SaveChanges();
@@ -349,6 +352,7 @@ namespace Usuarios.API.Repository
         {
             bool b = false;
             Usuario? u = await _db.Usuarios.FirstOrDefaultAsync(u => u.Id == Id);
+
             if (u != null)
             {
                 b = true;
@@ -358,6 +362,15 @@ namespace Usuarios.API.Repository
             return b;
         }
 
-        
+        public async Task<int> VerifyRol(int id)
+        {
+            Usuario? u = await _db.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
+            int rol = u.IdRol;
+            if (u != null)
+            {
+                _db.Entry(u).State = EntityState.Detached;
+            }
+            return rol;
+        }
     }
 }

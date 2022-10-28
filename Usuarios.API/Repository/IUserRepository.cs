@@ -20,6 +20,7 @@ namespace Usuarios.API.Repository
         Task<UsuarioPutDTO> UpdateUser(UsuarioPutDTO usuario);
         Task<bool> ChangeState(int opt, int Id);
         Task<bool> Exists(string carnet);
+        Task<int> VerifyRol(int id);
             
     }
 }
