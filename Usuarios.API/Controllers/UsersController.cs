@@ -344,5 +344,38 @@ namespace Usuarios.API.Controllers
             return Ok(_response);
         }
 
+        [HttpPut]
+        [Route("cambiarrol")]
+        public async Task<object> ChangeRol([FromBody] UsuarioRolDTO usuarioRol)
+        {
+            bool b = false;
+            string msg = String.Empty;
+
+            if (usuarioRol.IdRol==2)
+            {
+                msg = "Estudiante";
+            }
+            else
+            {
+                msg = "Bibliotecario";
+            }
+
+            try
+            {
+                b = await _userRepository.ChangeRol(usuarioRol);
+                if (b)
+                {
+                    _response.Success = true;
+                    _response.Message = "Se ha cambiado el rol de usuario a: " + msg;
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Message = "Ocurrió un error!";
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return Ok(_response);
+        }
+
     }
 }

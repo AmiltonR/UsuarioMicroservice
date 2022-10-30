@@ -69,5 +69,30 @@ namespace Usuarios.API.Controllers
             }
             return Ok(_response);
         }
+
+        [HttpPut]
+        public async Task<object> PutInstructor([FromBody] UsuarioInstructorPutDTO instructorPut)
+        {
+            bool usuario = false;
+
+            try
+            {
+                usuario = await _instructorRepository.ActualizarInstructor(instructorPut);
+                if (usuario)
+                {
+                    _response.Success = true;
+                    _response.Message = "Se han guardado los cambios en la cuenta de inctructor";
+                }
+                else
+                {
+                    _response.Message = "Ocurrió un error!";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return Ok(_response);
+        }
     }
 }

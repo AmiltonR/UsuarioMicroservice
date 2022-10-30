@@ -35,6 +35,10 @@ namespace Usuarios.API
                 //Grado
                 config.CreateMap<Grado, GradoGetPutDTO>();
                 config.CreateMap<GradoGetPutDTO, Grado>();
+
+                //Usuario Cambio Rol
+                config.CreateMap<Usuario, UsuarioRolDTO>();
+                config.CreateMap<UsuarioRolDTO, Usuario>();
             });
             return mappingConfig;
         }

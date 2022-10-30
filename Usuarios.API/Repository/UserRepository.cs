@@ -136,7 +136,7 @@ namespace Usuarios.API.Repository
         //Get Instructor by Id
         public async Task<UsuarioInstructorDTO> GetInstructor(int id)
         {
-            UsuarioInstructorDTO usuarioInstructorDTO = null;
+            UsuarioInstructorDTO? usuarioInstructorDTO = null;
             Instructor? instructor = await _db.Instructores.Include(u => u.Usuario)
                .Include(u => u.Grado).FirstOrDefaultAsync(u => u.IdUsuario == id);
 
@@ -305,13 +305,30 @@ namespace Usuarios.API.Repository
 
                 _db.Usuarios.Attach(user);
                 _db.Entry(user).Property(x => x.estado).IsModified = true;
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 flag = true;
             }
 
             return flag;
         }
 
+        //Cambiar a rol bibliotecario
+        public async Task<bool> ChangeRol(UsuarioRolDTO usuarioRol)
+        {
+            bool b = false;
+
+            bool verifiId = await verifyId(usuarioRol.Id);
+
+            if (verifiId)
+            {
+                Usuario u = _mapper.Map<UsuarioRolDTO, Usuario>(usuarioRol);
+                _db.Usuarios.Attach(u);
+                _db.Entry(u).Property(u => u.IdRol).IsModified = true;
+                await _db.SaveChangesAsync();
+                b = true;
+            }
+            return b;
+        }
 
         //Utilities
 
@@ -362,15 +379,6 @@ namespace Usuarios.API.Repository
             return b;
         }
 
-        public async Task<int> VerifyRol(int id)
-        {
-            Usuario? u = await _db.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
-            int rol = u.IdRol;
-            if (u != null)
-            {
-                _db.Entry(u).State = EntityState.Detached;
-            }
-            return rol;
-        }
+       
     }
 }
