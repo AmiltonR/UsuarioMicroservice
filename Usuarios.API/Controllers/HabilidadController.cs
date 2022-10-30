@@ -36,5 +36,57 @@ namespace Usuarios.API.Controllers
             }
             return Ok(_response);
         }
+
+        [HttpPost]
+        public async Task<object> Post([FromBody] HabilidadPostDTO habilidad)
+        {
+            bool usuario = false;
+
+            try
+            {
+                usuario = await _habilidadRepository.CreateHabilidad(habilidad);
+                if (usuario)
+                {
+                    _response.Success = true;
+                    _response.Message = "Nuevo registro de habilida guardada";
+                }
+                else
+                {
+                    _response.Message = "Ocurrió un error!";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Message = "Ocurrió un error!";
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return Ok(_response);
+        }
+
+        [HttpPut]
+        public async Task<object> Put([FromBody] HabilidadGetPutDTO habilidad)
+        {
+            bool usuario = false;
+
+            try
+            {
+                usuario = await _habilidadRepository.UpdateHabilidad(habilidad);
+                if (usuario)
+                {
+                    _response.Success = true;
+                    _response.Message = "Registro actualizado";
+                }
+                else
+                {
+                    _response.Message = "Ocurrió un error!";
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.Message = "Ocurrió un error!";
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return Ok(_response);
+        }
     }
 }

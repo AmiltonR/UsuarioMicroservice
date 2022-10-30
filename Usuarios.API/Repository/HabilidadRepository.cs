@@ -16,9 +16,21 @@ namespace Usuarios.API.Repository
             _db = db;
             _mapper = mapper;
         }
-        public Task<bool> CreateHabilidad(HabilidadPostDTO habilidad)
+        public async Task<bool> CreateHabilidad(HabilidadPostDTO habilidad)
         {
-            throw new NotImplementedException();
+            bool flag = false;
+            try
+            {
+                Habilidad hab = _mapper.Map<HabilidadPostDTO, Habilidad>(habilidad);
+                _db.Habilidades.Add(hab);
+                await _db.SaveChangesAsync();
+                flag = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return flag;
         }
 
         public Task<bool> DeleteHabilidad(int id)
@@ -32,9 +44,22 @@ namespace Usuarios.API.Repository
             return _mapper.Map<List<HabilidadGetPutDTO>>(habilidades);
         }
 
-        public Task<bool> UpdateHabilidad(HabilidadGetPutDTO habilidad)
+        public async Task<bool> UpdateHabilidad(HabilidadGetPutDTO habilidad)
         {
-            throw new NotImplementedException();
+            bool b = false;
+            try
+            {
+                Habilidad h = _mapper.Map<HabilidadGetPutDTO, Habilidad>(habilidad);
+                _db.Habilidades.Update(h);
+                await _db.SaveChangesAsync();
+                b = true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return b;
         }
     }
 }

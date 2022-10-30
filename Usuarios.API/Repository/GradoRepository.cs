@@ -17,10 +17,20 @@ namespace Usuarios.API.Repository
             _mapper = mapper;
         }
 
+        public Task<bool> CreateGrado(GradoPostDTO grado)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<GradoGetPutDTO>> GetGrados()
         {
             List<Grado> grados = await _db.Grados.ToListAsync();
             return _mapper.Map<List<GradoGetPutDTO>>(grados);
+        }
+
+        public Task<bool> UpdateGrado(GradoGetPutDTO grado)
+        {
+            throw new NotImplementedException();
         }
     }
 }

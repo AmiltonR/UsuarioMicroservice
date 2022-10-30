@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace UserDbContext.Domain.Models.DTOs
 {
-    public class HabilidadPostDTO
+    public class GradoPostDTO
     {
-        public string NombreHabilidad { get; set; }
-        public string DescripcionHabilidad { get; set; }
+        public string NombreGrado { get; set; }
+        public string Descripcion { get; set; }
     }
 }
