@@ -67,19 +67,36 @@ namespace Usuarios.API.Repository
                         _db.Entry(usuario).Property(x => x.Telefono).IsModified = true;
                         await _db.SaveChangesAsync();
 
-                        instructor = new Instructor
-                        {
-                            IdUsuario = updateInstructor.Idusuario,
-                            IdGradoAcademico = updateInstructor.IdGradoAcademico,
-                            Perfil = updateInstructor.Perfil,
-                        };
+                        Instructor? ins = await _db.Instructores.Where(i => i.IdUsuario == updateInstructor.Idusuario).FirstOrDefaultAsync();
 
-                        //save instructor
-                        _db.Attach(instructor);
-                        _db.Entry(instructor).Property(i => i.IdGradoAcademico).IsModified = true;
-                        _db.Entry(instructor).Property(i => i.Perfil).IsModified = true;
+                        //instructor = new Instructor
+                        //{
+                        //    IdUsuario = updateInstructor.Idusuario,
+                        //    IdGradoAcademico = updateInstructor.IdGradoAcademico,
+                        //    Perfil = updateInstructor.Perfil,
+                        //};
+                        ins.IdGradoAcademico = updateInstructor.IdGradoAcademico;
+                        ins.Perfil = updateInstructor.Perfil;
+
+                        _db.Entry(ins).State = EntityState.Detached;
+
+                        //Attach instructor
+                        _db.Attach(ins);
+                        _db.Entry(ins).Property(i => i.IdGradoAcademico).IsModified = true;
+                        _db.Entry(ins).Property(i => i.Perfil).IsModified = true;
                         await _db.SaveChangesAsync();
 
+                        //Eliminamos las habilidades que tenía para sustituir por las nuevas
+                        List<HabilidadInstructor> habilidadesGuardadas = await _db.HabilidadesInstructores.Where(h => h.IdUsuario == updateInstructor.Idusuario).ToListAsync();
+
+                        foreach (var item in habilidadesGuardadas)
+                        {
+                            //Eliminamos las habilidades que estaban guardadas anteriormente
+                            _db.HabilidadesInstructores.Remove(item);
+                            await _db.SaveChangesAsync();
+                        }
+
+                        //Guardamos las nuevas habilidades
                         foreach (var item in updateInstructor.Habilidades)
                         {
                             instructorHabilidad = new HabilidadInstructor
@@ -87,6 +104,8 @@ namespace Usuarios.API.Repository
                                 IdUsuario = updateInstructor.Idusuario,
                                 IdHabilidad = item.IdHabilidad,
                             };
+
+                            //Guardamos una nueva habilidad
                             _db.HabilidadesInstructores.Add(instructorHabilidad);
                             await _db.SaveChangesAsync();
                         }
