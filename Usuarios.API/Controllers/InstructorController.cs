@@ -48,19 +48,23 @@ namespace Usuarios.API.Controllers
         [Route("cambiorol")]
         public async Task<object> PostInstructor([FromBody] InstructorCambioRolInstructor instructorPost)
         {
-            bool usuario = false;
+            int usuario = 0;
 
             try
             {
                 usuario = await _instructorRepository.CambiarUsuarioAInstructor(instructorPost);
-                if (usuario)
+                if (usuario== 1)
                 {
                     _response.Success = true;
                     _response.Message = "Cambio de cuenta de estudiante a instructor exitoso";
                 }
+                else if(usuario == 2)
+                {
+                    _response.Message = "Ya existe el instructor. Intente actualizar su perfil";
+                }
                 else
                 {
-                    _response.Message = "Ocurrió un error!";
+                    _response.Message = "Error no controlado :(";
                 }
             }
             catch (Exception ex)

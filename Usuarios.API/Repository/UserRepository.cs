@@ -93,6 +93,7 @@ namespace Usuarios.API.Repository
         {
             List<Instructor>? instructores = await _db.Instructores.Include(u=> u.Usuario)
                 .Include(u => u.Grado).Where(u => u.Usuario.estado == 1).ToListAsync();
+
             List<UsuarioInstructorDTO> listaInstructores = new List<UsuarioInstructorDTO>();
             UsuarioInstructorDTO usuarioInstructorDTO = null;
 

@@ -97,63 +97,72 @@ namespace Usuarios.API.Repository
             return b;
         }
 
-        public async Task<bool> CambiarUsuarioAInstructor(InstructorCambioRolInstructor cambioInstructor)
+        public async Task<int> CambiarUsuarioAInstructor(InstructorCambioRolInstructor cambioInstructor)
         {
             //Variables
-            bool b = false;
+            int response = 0;
             Instructor instructor = null;
             UsuarioRolDTO usuario = null;
             HabilidadInstructor habilidades = null;
             using var transaction = _db.Database.BeginTransaction();
 
-            try
+            //Verificar que no exista en la tabla instructores
+            Instructor? ins =  await _db.Instructores.Where(i => i.IdUsuario == cambioInstructor.IdUsuario).FirstOrDefaultAsync();
+
+            if (ins == null)//Si ins == null significa que no se encontró el idUsuario en la tabla instructores
             {
-                //Guardar datos en Instructor
-                instructor = new Instructor
+                try
                 {
-                    IdUsuario = cambioInstructor.IdUsuario,
-                    IdGradoAcademico = cambioInstructor.IdGradoAcademico,
-                    Perfil = cambioInstructor.Perfil
-                };
-
-                //Guardando en base de datos
-                _db.Instructores.Add(instructor);
-                await _db.SaveChangesAsync();
-
-                //Modificando el rol en la cuenta de usuario
-                usuario = new UsuarioRolDTO
-                {
-                    Id = cambioInstructor.IdUsuario,
-                    IdRol = 3
-                };
-
-                Usuario u = _mapper.Map<UsuarioRolDTO, Usuario>(usuario);
-                _db.Usuarios.Attach(u);
-                _db.Entry(u).Property(u => u.IdRol).IsModified = true;
-                await _db.SaveChangesAsync();
-
-                //Guardar las Habilidades
-                foreach (var item in cambioInstructor.Habilidades)
-                {
-                    habilidades = new HabilidadInstructor
+                    //Guardar datos en Instructor
+                    instructor = new Instructor
                     {
-                        IdUsuario = usuario.Id,
-                        IdHabilidad = item.IdHabilidad
+                        IdUsuario = cambioInstructor.IdUsuario,
+                        IdGradoAcademico = cambioInstructor.IdGradoAcademico,
+                        Perfil = cambioInstructor.Perfil
                     };
-                    _db.HabilidadesInstructores.Add(habilidades);
+
+                    //Guardando en base de datos
+                    _db.Instructores.Add(instructor);
                     await _db.SaveChangesAsync();
+
+                    //Modificando el rol en la cuenta de usuario
+                    usuario = new UsuarioRolDTO
+                    {
+                        Id = cambioInstructor.IdUsuario,
+                        IdRol = 3
+                    };
+
+                    Usuario u = _mapper.Map<UsuarioRolDTO, Usuario>(usuario);
+                    _db.Usuarios.Attach(u);
+                    _db.Entry(u).Property(u => u.IdRol).IsModified = true;
+                    await _db.SaveChangesAsync();
+
+                    //Guardar las Habilidades
+                    foreach (var item in cambioInstructor.Habilidades)
+                    {
+                        habilidades = new HabilidadInstructor
+                        {
+                            IdUsuario = usuario.Id,
+                            IdHabilidad = item.IdHabilidad
+                        };
+                        _db.HabilidadesInstructores.Add(habilidades);
+                        await _db.SaveChangesAsync();
+                    }
+
+                    transaction.Commit();
+
+                    response = 1;//Cuando la tarea se completa con exito
                 }
-
-                transaction.Commit();
-
-                b = true;
+                catch (Exception)
+                {
+                    throw;
+                }
             }
-            catch (Exception)
+            else
             {
-                throw;
+                response = 2;//Cuando el usuario ya está categorizado como instructor   
             }
-
-            return b;
+            return response;
         }
 
         public async Task<bool> CreateNuevaCuentaInstructor(InstructorCuentaNuevaPostDTO cuentaInstructor)
@@ -265,6 +274,7 @@ namespace Usuarios.API.Repository
         //Verificar que el carnet exista
         public async Task<bool> CarnetUsuario(string carnet, int id)
         {
+            //Devuelve true si se el carnet de parámetro pertenece al id 
             bool b = false;
             Usuario? u = await _db.Usuarios.FirstOrDefaultAsync(u => u.Carnet == carnet);
 
