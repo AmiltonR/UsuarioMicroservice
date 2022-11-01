@@ -10,7 +10,6 @@ namespace UserDbContext.Domain.Models.DTOs
     public class InstructorCuentaNuevaPostDTO
     {
         public string Perfil { get; set; }
-        public string Carnet { get; set; }
         public string Clave { get; set; }
         public string NombreUsuario { get; set; }
         public string ApellidoUsuario { get; set; }

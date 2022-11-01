@@ -3,98 +3,113 @@ using Microsoft.EntityFrameworkCore;
 using UserDbContext.Domain.Models.DTOs;
 using UserDbContext.Domain.Models.Entities;
 using UserDbContext.Infrastructure;
+using Usuarios.API.Utilities;
 
 namespace Usuarios.API.Repository
 {
     public class InstructorRepository : IInstructorRepository
     {
         private readonly UserContext _db;
+        private readonly GenerarCarnet _generarCarnet;
         private IMapper _mapper;
+        protected ResponseNuevaCuentaDto _response;
 
-        public InstructorRepository(UserContext db, IMapper mapper)
+        public InstructorRepository(UserContext db, IMapper mapper, GenerarCarnet generarCarnet)
         {
             _db = db;
             _mapper = mapper;
+            _generarCarnet = generarCarnet;
+            _response = new ResponseNuevaCuentaDto();
         }
 
-        public async Task<bool> ActualizarInstructor(UsuarioInstructorPutDTO updateInstructor)
+        public async Task<int> ActualizarInstructor(UsuarioInstructorPutDTO updateInstructor)
         {
-            bool b = false;
+            int response = 0;
+            //Para actualizar el rol en la tabla de usuarios
             Usuario usuario = null;
+            //Para actualizar la data en la tabla de instructores
             Instructor instructor = null;
+            //Para guardar las habilidades en la tabla de habilidadesInstructores
             HabilidadInstructor instructorHabilidad = null;
             using var transaction = _db.Database.BeginTransaction();
 
             try
             {
-               string carnet = updateInstructor.Carnet;
-                //el carnet le pertenezca al usuario actual; sino, ya existe carnet
-                bool carnetusuario = await CarnetUsuario(carnet, updateInstructor.Idusuario);
-                //Existe el id
-                bool existe = await verifyId(updateInstructor.Idusuario);
-                int rol = await VerifyRol(updateInstructor.Idusuario);
+                //Verificar que el id del usuario existe
+                bool idExiste = await verifyId(updateInstructor.Idusuario);
+                //es de rol instructor
+                
 
-                //Si no existe el carnet y el rol es instructor
-                if (existe && rol == 3 && carnetusuario)
+                if (idExiste)//si existe el usuario
                 {
-                    usuario = new Usuario
+                    int rol = await VerifyRol(updateInstructor.Idusuario);
+                    if (rol == 3)//Si el usuario es instructor (idRol = 3)
                     {
-                        Id = updateInstructor.Idusuario,
-                        Carnet = updateInstructor.Carnet,
-                        Clave = updateInstructor.Clave,
-                        NombreUsuario = updateInstructor.NombreUsuario,
-                        ApellidoUsuario = updateInstructor.ApellidoUsuario,
-                        Correo = updateInstructor.Correo,
-                        Telefono = updateInstructor.Telefono,
-                        Direccion = updateInstructor.Direccion,
-                        Edad = updateInstructor.Edad,
-                    };
+                        usuario = new Usuario
+                        {
+                            Id = updateInstructor.Idusuario,
+                            Clave = updateInstructor.Clave,
+                            NombreUsuario = updateInstructor.NombreUsuario,
+                            ApellidoUsuario = updateInstructor.ApellidoUsuario,
+                            Correo = updateInstructor.Correo,
+                            Telefono = updateInstructor.Telefono,
+                            Direccion = updateInstructor.Direccion,
+                            Edad = updateInstructor.Edad,
+                        };
 
-                    //save usuario
-                    _db.Usuarios.Attach(usuario);
-                    _db.Entry(usuario).Property(x => x.Carnet).IsModified = true;
-                    _db.Entry(usuario).Property(x => x.NombreUsuario).IsModified = true;
-                    _db.Entry(usuario).Property(x => x.ApellidoUsuario).IsModified = true;
-                    _db.Entry(usuario).Property(x => x.Correo).IsModified = true;
-                    _db.Entry(usuario).Property(x => x.Direccion).IsModified = true;
-                    _db.Entry(usuario).Property(x => x.Edad).IsModified = true;
-                    _db.Entry(usuario).Property(x => x.Telefono).IsModified = true;
-                    await _db.SaveChangesAsync();
+                        //save usuario
+                        _db.Usuarios.Attach(usuario);
+                        _db.Entry(usuario).Property(x => x.NombreUsuario).IsModified = true;
+                        _db.Entry(usuario).Property(x => x.ApellidoUsuario).IsModified = true;
+                        _db.Entry(usuario).Property(x => x.Correo).IsModified = true;
+                        _db.Entry(usuario).Property(x => x.Direccion).IsModified = true;
+                        _db.Entry(usuario).Property(x => x.Edad).IsModified = true;
+                        _db.Entry(usuario).Property(x => x.Telefono).IsModified = true;
+                        await _db.SaveChangesAsync();
 
-                    instructor = new Instructor
-                    {
-                        IdUsuario = updateInstructor.Idusuario,
-                        IdGradoAcademico = updateInstructor.IdGradoAcademico,
-                        Perfil = updateInstructor.Perfil,
-                    };
-
-                    //save instructor
-                    _db.Attach(instructor);
-                    _db.Entry(instructor).Property(i => i.IdGradoAcademico).IsModified = true;
-                    _db.Entry(instructor).Property(i => i.Perfil).IsModified = true;
-                    await _db.SaveChangesAsync();
-
-                    foreach (var item in updateInstructor.Habilidades)
-                    {
-                        instructorHabilidad = new HabilidadInstructor
+                        instructor = new Instructor
                         {
                             IdUsuario = updateInstructor.Idusuario,
-                            IdHabilidad = item.IdHabilidad,
+                            IdGradoAcademico = updateInstructor.IdGradoAcademico,
+                            Perfil = updateInstructor.Perfil,
                         };
-                        _db.HabilidadesInstructores.Add(instructorHabilidad);
-                        await _db.SaveChangesAsync();
-                    }
 
-                    //commit o rollback
-                    transaction.Commit();
-                    b = true;
+                        //save instructor
+                        _db.Attach(instructor);
+                        _db.Entry(instructor).Property(i => i.IdGradoAcademico).IsModified = true;
+                        _db.Entry(instructor).Property(i => i.Perfil).IsModified = true;
+                        await _db.SaveChangesAsync();
+
+                        foreach (var item in updateInstructor.Habilidades)
+                        {
+                            instructorHabilidad = new HabilidadInstructor
+                            {
+                                IdUsuario = updateInstructor.Idusuario,
+                                IdHabilidad = item.IdHabilidad,
+                            };
+                            _db.HabilidadesInstructores.Add(instructorHabilidad);
+                            await _db.SaveChangesAsync();
+                        }
+
+                        //commit o rollback
+                        transaction.Commit();
+                        response = 1;//cuando la tarea se completa con éxito
+                    }
+                    else
+                    {
+                        response = 2;//Cuando el rol es diferente de instructor
+                    }
+                }
+                else
+                {
+                    response = 3;//El usuario no existe
                 }
             }
             catch (Exception)
             {
                 throw;
             }
-            return b;
+            return response;
         }
 
         public async Task<int> CambiarUsuarioAInstructor(InstructorCambioRolInstructor cambioInstructor)
@@ -165,15 +180,18 @@ namespace Usuarios.API.Repository
             return response;
         }
 
-        public async Task<bool> CreateNuevaCuentaInstructor(InstructorCuentaNuevaPostDTO cuentaInstructor)
+        public async Task<ResponseNuevaCuentaDto> CreateNuevaCuentaInstructor(InstructorCuentaNuevaPostDTO cuentaInstructor)
         {
             Usuario? usuario = null;
             Instructor instructor = null;
             HabilidadInstructor habilidades = null;
             using var transaction = _db.Database.BeginTransaction();
-            bool b = false;
+            int b = 0;
 
-            bool ex = await Exists(cuentaInstructor.Carnet);
+            string carnet = _generarCarnet.Generar(cuentaInstructor.NombreUsuario, cuentaInstructor.ApellidoUsuario, cuentaInstructor.Edad);
+
+
+            bool ex = await Exists(carnet);
 
             if (!ex)
             {
@@ -182,7 +200,7 @@ namespace Usuarios.API.Repository
                     //Crear objeto usuario
                     usuario = new Usuario
                     {
-                        Carnet = cuentaInstructor.Carnet,
+                        Carnet = carnet,
                         Clave = cuentaInstructor.Clave,
                         NombreUsuario = cuentaInstructor.NombreUsuario,
                         ApellidoUsuario = cuentaInstructor.ApellidoUsuario,
@@ -229,15 +247,35 @@ namespace Usuarios.API.Repository
                     //Commit transacction or rollback
                     transaction.Commit();
 
-                    b = true;
+                    b = 1;//Cuando la tarea se completa con exito
+
+
+                    //Crear objeto  para devolver id
+                    int idRespuesta;
+                    try
+                    {
+                        Usuario? usuarioRespuesta = await _db.Usuarios.Where(u => u.Carnet == carnet).FirstOrDefaultAsync();
+                        idRespuesta = usuarioRespuesta.Id;
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                    _response.id = idRespuesta;
                 }
                 catch (Exception)
                 {
                     throw;
                 }
             }
+            else
+            {
+                b = 2;//Cuando ya existe el carnet
+            }
+
+            _response.r = b;
             
-            return b;
+            return _response;
         }
         public async Task<bool> Exists(string carnet)
         {
@@ -264,7 +302,7 @@ namespace Usuarios.API.Repository
 
             if (u != null)
             {
-                b = true;
+                b = true;//El usuario existe
                 _db.Entry(u).State = EntityState.Detached;
             }
 
@@ -272,22 +310,27 @@ namespace Usuarios.API.Repository
         }
 
         //Verificar que el carnet exista
-        public async Task<bool> CarnetUsuario(string carnet, int id)
+        public async Task<int> CarnetUsuario(string carnet, int id)
         {
-            //Devuelve true si se el carnet de parámetro pertenece al id 
-            bool b = false;
+            //Devuelve 1 si se el carnet de parámetro pertenece al id 
+            int response= 0;
             Usuario? u = await _db.Usuarios.FirstOrDefaultAsync(u => u.Carnet == carnet);
 
+            //si es diferente de null significa que se encontró el carnet
             if (u != null)
             {
-                if (u.Id == id)
+                if (u.Id == id)//se verifica que el carnet pertenezca al usuario en cuestión; sino, el carnet existe pero es de otro usuario
                 {
-                    b = true;
+                   response = 1;//El carnet existe y es del usuario
+                }
+                else
+                {
+                    response = 2;//El carnet existe pero no es del usuario
                 }
                 _db.Entry(u).State = EntityState.Detached;
             }
 
-            return b;
+            return response;
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using UserDbContext.Infrastructure;
 using Usuarios.API;
 using Usuarios.API.Repository;
+using Usuarios.API.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IInstructorRepository, InstructorRepository>();
 builder.Services.AddScoped<IGradoRepository, GradoRepository>();
 builder.Services.AddScoped<IHabilidadRepository, HabilidadRepository>();
+builder.Services.AddSingleton<GenerarCarnet>();
 
 builder.Services.AddDbContext<UserContext>(options =>
 {
