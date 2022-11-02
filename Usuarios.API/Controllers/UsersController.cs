@@ -273,17 +273,9 @@ namespace Usuarios.API.Controllers
 
             try
             {
-                bool exists = await _userRepository.Exists(usuarioPost.Carnet);
-                if (!exists)
-                {
-                    usuario = await _userRepository.CreateUser(usuarioPost);
-                    _response.Success = true;
-                    _response.Message = "Cuenta de usuario creada";
-                }
-                else
-                {
-                    _response.Message = "El carnet ya existe";
-                } 
+                usuario = await _userRepository.CreateUser(usuarioPost);
+                _response.Success = true;
+                _response.Message = "Cuenta de usuario creada";
             }
             catch (Exception ex)
             {

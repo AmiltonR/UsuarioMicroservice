@@ -94,9 +94,11 @@ namespace Usuarios.API.Repository
         //Get instructores
         public async Task<IEnumerable<UsuarioInstructorDTO>> GetInstructores()
         {
+            //Traer instructores activos
             List<Instructor>? instructores = await _db.Instructores.Include(u=> u.Usuario)
                 .Include(u => u.Grado).Where(u => u.Usuario.estado == 1).ToListAsync();
 
+            //Variables de retorno
             List<UsuarioInstructorDTO> listaInstructores = new List<UsuarioInstructorDTO>();
             UsuarioInstructorDTO usuarioInstructorDTO = null;
 
@@ -105,9 +107,11 @@ namespace Usuarios.API.Repository
                 List<HabilidadInstructor> habilidadesInstructor = await _db.HabilidadesInstructores
                                                                  .Where(i => i.IdUsuario == item.IdUsuario).Include(h => h.Habilidad).ToListAsync();
 
+                //variables para tratamiento de habilidades por instructor
                 List<HabilidadesStringDTO> habilidadesString = new List<HabilidadesStringDTO>();
                 HabilidadesStringDTO hs = null;
 
+                //Recorre cada habilidad por instructor y la agrega a la lista
                 foreach (var i in habilidadesInstructor)
                 {
                     hs = new HabilidadesStringDTO
