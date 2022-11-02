@@ -281,6 +281,7 @@ namespace Usuarios.API.Repository
                         throw;
                     }
                     _response.id = idRespuesta;
+                    _response.carnet = carnet;
                 }
                 catch (Exception)
                 {

@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using UserDbContext.Domain.Models.DTOs;
 using UserDbContext.Domain.Models.Entities;
 using UserDbContext.Infrastructure;
+using Usuarios.API.Utilities;
 
 namespace Usuarios.API.Repository
 {
@@ -12,11 +13,13 @@ namespace Usuarios.API.Repository
     {
         private readonly UserContext _db;
         private IMapper _mapper;
+        private readonly GenerarCarnet _generarCarnet;
 
-        public UserRepository(UserContext db, IMapper mapper)
+        public UserRepository(UserContext db, IMapper mapper, GenerarCarnet generarCarnet)
         {
             _db = db;
             _mapper = mapper;
+            _generarCarnet = generarCarnet;
         }
         //Get absolutly all users
         public async Task<IEnumerable<UsuarioDTO>> GetUsers()
@@ -233,6 +236,8 @@ namespace Usuarios.API.Repository
             try
             {
                 Usuario usuario = _mapper.Map<UsuarioPostDTO, Usuario>(usuariopost);
+                //Generando carnet
+                usuario.Carnet = _generarCarnet.Generar(usuariopost.NombreUsuario, usuariopost.ApellidoUsuario, usuariopost.Edad);
                 _db.Usuarios.Add(usuario);
                 await _db.SaveChangesAsync();
                 flag = true;

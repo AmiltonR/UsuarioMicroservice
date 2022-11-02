@@ -10,5 +10,6 @@ namespace UserDbContext.Domain.Models.DTOs
     {
         public int r { get; set; }
         public int id { get; set; } = 0;
+        public string carnet { get; set; }
     }
 }
