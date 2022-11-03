@@ -38,6 +38,12 @@ namespace Usuarios.API.Repository
             throw new NotImplementedException();
         }
 
+        public async Task<HabilidadGetPutDTO> GetHabilidadById(int Id)
+        {
+            Habilidad? habilidad = await _db.Habilidades.Where(h => h.Id == Id).FirstOrDefaultAsync();
+            return _mapper.Map<Habilidad, HabilidadGetPutDTO>(habilidad);
+        }
+
         public async Task<List<HabilidadGetPutDTO>> GetHabilidades()
         {
             List<Habilidad> habilidades = await _db.Habilidades.ToListAsync();

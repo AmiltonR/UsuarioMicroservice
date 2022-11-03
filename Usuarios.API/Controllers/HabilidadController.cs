@@ -37,6 +37,26 @@ namespace Usuarios.API.Controllers
             return Ok(_response);
         }
 
+        //Get all
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<object> GetById(int Id)
+        {
+            HabilidadGetPutDTO habilidad = null;
+            try
+            {
+                habilidad = await _habilidadRepository.GetHabilidadById(Id);
+                _response.Success = true;
+                _response.Result = habilidad;
+                _response.Message = "Habilidad";
+            }
+            catch (Exception ex)
+            {
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return Ok(_response);
+        }
+
         [HttpPost]
         public async Task<object> Post([FromBody] HabilidadPostDTO habilidad)
         {
