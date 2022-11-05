@@ -55,6 +55,15 @@ namespace Usuarios.API.Repository
             return usuariosList;
         }
 
+        //Get students
+        //Falta colocarlo en el controlador
+        public async Task<IEnumerable<UsuarioDTO>> GetStudents()
+        {
+            List<Usuario>? usuarios = await _db.Usuarios.Where(x => x.IdRol == 1 && x.estado == 1).Include(u => u.rol).ToListAsync();
+            List<UsuarioDTO> usuariosList = transformToListDto(usuarios);
+            return usuariosList;
+        }
+
         //Get User By ID
         public async Task<UsuarioDTO> GetUserById(int UserId)
         {
@@ -96,7 +105,7 @@ namespace Usuarios.API.Repository
         {
             //Traer instructores activos
             List<Instructor>? instructores = await _db.Instructores.Include(u=> u.Usuario)
-                .Include(u => u.Grado).Where(u => u.Usuario.estado == 1).ToListAsync();
+                .Include(u => u.Grado).Where(u => u.Usuario.estado == 1).OrderBy(t => t.Usuario.NombreUsuario).ToListAsync();
 
             //Variables de retorno
             List<UsuarioInstructorDTO> listaInstructores = new List<UsuarioInstructorDTO>();

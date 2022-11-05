@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using UserDbContext.Domain.Models.DTOs;
 using UserDbContext.Domain.Models.Entities;
 using UserDbContext.Infrastructure;
@@ -79,6 +81,7 @@ namespace Usuarios.API.Controllers
         //Get By Id
         [HttpGet]
         [Route("{id}")]
+        //[Authorize(Roles = "1, 2")]
         public async Task<object> GetUserById(int id)
         {
             UsuarioDTO usuarioDto = null;
