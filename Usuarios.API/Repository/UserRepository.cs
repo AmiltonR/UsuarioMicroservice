@@ -269,7 +269,7 @@ namespace Usuarios.API.Repository
             Usuario usuario = _mapper.Map<UsuarioPutDTO, Usuario>(usuarioput);
             _db.Usuarios.Attach(usuario);
             _db.Entry(usuario).Property(x => x.Carnet).IsModified = true;
-            _db.Entry(usuario).Property(x => x.Clave).IsModified = true;
+            _db.Entry(usuario).Property(x => x.Clave).IsModified = true;//necesita método aparte
             _db.Entry(usuario).Property(x => x.NombreUsuario).IsModified = true;
             _db.Entry(usuario).Property(x => x.ApellidoUsuario).IsModified = true;
             _db.Entry(usuario).Property(x => x.Correo).IsModified = true;

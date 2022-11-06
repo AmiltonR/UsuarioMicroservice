@@ -41,7 +41,7 @@ namespace Usuarios.API.Controllers
                 {
                     _response.Message = "Ocurrió un error!";
                 }
-                _response.Result = _resp.id;
+                _response.Result = _resp.carnet;//enviando el carnet de respuesta
             }
             catch (Exception ex)
             {
