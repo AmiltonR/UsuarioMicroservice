@@ -253,6 +253,13 @@ namespace Usuarios.API.Repository
                 usuario.Carnet = _generarCarnet.Generar(usuariopost.NombreUsuario, usuariopost.ApellidoUsuario, usuariopost.Edad);
                 _db.Usuarios.Add(usuario);
                 await _db.SaveChangesAsync();
+                //Enviar correo
+                string mensaje = "¡Bienvenid@ a la Biblioteca comunitaria de Jardines de Colón!<br/>"+
+                                    "<strong>Credenciales</strong>" + "< br /> "+
+                                    "Carnet: " +usuario.Carnet+"<br/>"+
+                                    "Clave: "+ usuario.Clave + "<br/>" +
+                                    "<strong>Le recomendamos que cambie su clave al iniciar sesión por primera vez</strong>";
+                MailSender.Principal(mensaje, "Cuenta Nueva | Biblioteca comunitaria de Jardines de Colón", usuario.Correo);//validar correo?
                 flag = true;
             }
             catch (Exception)

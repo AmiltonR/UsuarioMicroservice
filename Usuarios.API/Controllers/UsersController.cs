@@ -42,7 +42,7 @@ namespace Usuarios.API.Controllers
             return Ok(usuarioDtos);
         }
 
-        //Get all
+        //Get active
         [HttpGet]
         [Route("active")]
         public async Task<object> GetActiveUsers()
@@ -81,7 +81,6 @@ namespace Usuarios.API.Controllers
         //Get By Id
         [HttpGet]
         [Route("{id}")]
-        //[Authorize(Roles = "1, 2")]
         public async Task<object> GetUserById(int id)
         {
             UsuarioDTO usuarioDto = null;
@@ -169,6 +168,33 @@ namespace Usuarios.API.Controllers
             try
             {
                 usuarioDto = await _userRepository.GetUsersRolStBib();
+                if (usuarioDto == null)
+                {
+                    _response.Message = "Hubo un error";
+                }
+                else
+                {
+                    _response.Success = true;
+                    _response.Message = "Datos del usuario";
+                    _response.Result = usuarioDto;
+                }
+            }
+            catch (Exception ex)
+            {
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            return Ok(_response);
+        }
+
+        //Get estudents
+        [HttpGet]
+        [Route("estudiantes")]//falta agregar al gateway
+        public async Task<object> GetStudents()
+        {
+            IEnumerable<UsuarioDTO> usuarioDto = null;
+            try
+            {
+                usuarioDto = await _userRepository.GetStudents();
                 if (usuarioDto == null)
                 {
                     _response.Message = "Hubo un error";
