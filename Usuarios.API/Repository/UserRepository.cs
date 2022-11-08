@@ -195,6 +195,7 @@ namespace Usuarios.API.Repository
             return usuarioInstructorDTO;
         }
 
+        //Get instructores by Habilidad
         public async Task<IEnumerable<UsuarioInstructorDTO>> GetInstructoresByHabilidad(int idHabilidad)
         {
             //Filtramos la entidad Habilidades Instructor donde aparezca la habilidad que deseamos
@@ -207,7 +208,7 @@ namespace Usuarios.API.Repository
             //que tra la lista de habilidades
             foreach (var item in habilidades)
             {
-                instructor = await _db.Instructores.Where(i => i.IdUsuario == item.IdUsuario).Include(i => i.Usuario)
+                instructor = await _db.Instructores.Where(i => i.IdUsuario == item.IdUsuario && i.Usuario.estado == 1).Include(i => i.Usuario)
                     .Include(i => i.Grado).FirstOrDefaultAsync();
                 instructores.Add(instructor);
             }
