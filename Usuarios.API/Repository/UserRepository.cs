@@ -58,7 +58,7 @@ namespace Usuarios.API.Repository
         //Get students
         public async Task<IEnumerable<UsuarioDTO>> GetStudents()
         {
-            List<Usuario>? usuarios = await _db.Usuarios.Where(x => x.IdRol == 1 && x.estado == 1).OrderBy(e => e.NombreUsuario).Include(u => u.rol).ToListAsync();
+            List<Usuario>? usuarios = await _db.Usuarios.Where(x => x.IdRol ==2 && x.estado == 1).OrderBy(e => e.NombreUsuario).Include(u => u.rol).ToListAsync();
             List<UsuarioDTO> usuariosList = transformToListDto(usuarios);
             return usuariosList;
         }
