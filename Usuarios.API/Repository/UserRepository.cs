@@ -210,7 +210,10 @@ namespace Usuarios.API.Repository
             {
                 instructor = await _db.Instructores.Where(i => i.IdUsuario == item.IdUsuario && i.Usuario.estado == 1).Include(i => i.Usuario)
                     .Include(i => i.Grado).FirstOrDefaultAsync();
-                instructores.Add(instructor);
+                if (instructor!=null)
+                {
+                    instructores.Add(instructor);
+                }
             }
 
             //preparamos la lista de retorno
