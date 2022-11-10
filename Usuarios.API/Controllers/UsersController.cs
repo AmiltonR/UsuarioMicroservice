@@ -213,6 +213,22 @@ namespace Usuarios.API.Controllers
             return Ok(_response);
         }
 
+        //Get studiantes para agregado de inscribir estudiantes
+        [HttpGet]
+        [Route("estudiantesagg")]//falta agregar al gateway
+        public async Task<object> GetStudentsAgg()
+        {
+            IEnumerable<UsuarioDTO> usuarioDto = null;
+            try
+            {
+                usuarioDto = await _userRepository.GetStudents();
+            }
+            catch (Exception ex)
+            {
+            }
+            return Ok(usuarioDto);
+        }
+
         //Get instructores
         [HttpGet]
         [Route("instructores")]

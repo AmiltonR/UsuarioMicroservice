@@ -19,6 +19,6 @@ namespace UserDbContext.Domain.Models.DTOs
         public int Edad { get; set; }
         public DateTime FechaRegistro { get; set; }
         public int IdRol { get; set; }
-        public int estado { get; set; }
+        public int estado { get; set; } = 1;
     }
 }
