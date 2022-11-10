@@ -13,9 +13,9 @@ namespace Usuarios.API.Utilities
 
         static async Task Execute(string mensaje, string asunto, string correo)
         {
-            var apiKey = "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";
+            var apiKey = "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";
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("2502592017@mail.utec.edu.sv", "Biblioteca Comunitaria de Jardines de Colón");
+            var from = new EmailAddress("2538362017@mail.utec.edu.sv", "Biblioteca Comunitaria de Jardines de Colón");
             var subject = asunto;
             var to = new EmailAddress(correo, "Estudiante");
             var plainTextContent = mensaje;
