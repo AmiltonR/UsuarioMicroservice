@@ -188,7 +188,7 @@ namespace Usuarios.API.Controllers
 
         //Get estudents
         [HttpGet]
-        [Route("estudiantes")]//falta agregar al gateway
+        [Route("estudiantes")]
         public async Task<object> GetStudents()
         {
             IEnumerable<UsuarioDTO> usuarioDto = null;
