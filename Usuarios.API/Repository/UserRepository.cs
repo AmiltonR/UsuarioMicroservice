@@ -257,12 +257,16 @@ namespace Usuarios.API.Repository
                 _db.Usuarios.Add(usuario);
                 await _db.SaveChangesAsync();
                 //Enviar correo
-                string mensaje = "¡Bienvenid@ a la Biblioteca comunitaria de Jardines de Colón!<br/>"+
-                                    "<strong>Credenciales</strong>" + "< br /> "+
-                                    "Carnet: " +usuario.Carnet+"<br/>"+
-                                    "Clave: "+ usuario.Clave + "<br/>" +
-                                    "<strong>Le recomendamos que cambie su clave al iniciar sesión por primera vez</strong>";
-                MailSender.Principal(mensaje, "Cuenta Nueva | Biblioteca comunitaria de Jardines de Colón", usuario.Correo);//validar correo?
+                if (usuariopost.Correo != null)
+                {
+                    //Enviar correo
+                    string mensaje = "<h1>¡Bienvenid@ a la Biblioteca comunitaria de Jardines de Colón!</h1><br/>" +
+                                        "<strong>Credenciales</strong>" + "<br/> " +
+                                        "Carnet: " + usuario.Carnet + "<br/>" +
+                                        "Clave: " + usuario.Clave + "<br/>" +
+                                        "<h3>Le recomendamos que cambie su clave al iniciar sesión por primera vez</h3>";
+                    MailSender.sendMail(usuario.Correo, "Nueva Cuenta | Biblioteca Comunitaria Jardines", mensaje);
+                }
                 flag = true;
             }
             catch (Exception)

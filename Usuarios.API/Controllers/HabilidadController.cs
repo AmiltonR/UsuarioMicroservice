@@ -37,7 +37,7 @@ namespace Usuarios.API.Controllers
             return Ok(_response);
         }
 
-        //Get all
+        //Get by id
         [HttpGet]
         [Route("{id}")]
         public async Task<object> GetById(int Id)

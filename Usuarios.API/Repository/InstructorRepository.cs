@@ -284,10 +284,13 @@ namespace Usuarios.API.Repository
 
                     if (correo!=null)
                     {
-                        string mensaje = "¡Bienvenid@ a la biblioteca comunitaria Jardines de Colón!<br/> Su carnet es: " + usuario.Carnet
-                                        + "<br/>Su clave es: " + usuario.Clave + "<br/>Asegúrese de cambiar su clave luego del primer inicio de sesión!";
-
-                        MailSender.Principal(mensaje, "Cuenta Creada Biblioteca Comunitaria Jardines de Colón", correo);
+                        //Enviar correo
+                        string mensaje = "<h1>¡Bienvenid@ a la Biblioteca comunitaria de Jardines de Colón!</h1><br/>" +
+                                            "<strong>Credenciales</strong>" + "<br/> " +
+                                            "Carnet: " + usuario.Carnet + "<br/>" +
+                                            "Clave: " + usuario.Clave + "<br/>" +
+                                            "<h3>Le recomendamos que cambie su clave al iniciar sesión por primera vez</h3>";
+                        MailSender.sendMail(usuario.Correo, "Nueva Cuenta | Biblioteca Comunitaria Jardines", mensaje);
                     }
 
                     _response.id = idRespuesta;
