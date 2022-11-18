@@ -210,7 +210,7 @@ namespace Usuarios.API.Controllers
             {
                 _response.ErrorMessages = new List<string>() { ex.ToString() };
             }
-            return Ok(_response);
+            return Ok(usuarioDto);
         }
 
         //Get studiantes para agregado de inscribir estudiantes
