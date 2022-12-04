@@ -5,6 +5,7 @@ using Usuarios.API.Repository;
 
 namespace Usuarios.API.Controllers
 {
+    //c
     [Route("api/[controller]")]
     [ApiController]
     public class GradoController : ControllerBase
